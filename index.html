@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Infinite Scroll Cards</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .card {
+      margin-bottom: 20px;
+    }
+    .loading-spinner {
+      display: none;
+      text-align: center;
+      padding: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container mt-4">
+    <h1 class="text-center mb-4">Infinite Scroll Cards</h1>
+    <div class="row" id="card-container">
+      <!-- Cards will be dynamically added here -->
+    </div>
+    <div class="loading-spinner" id="loading-spinner">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS and dependencies -->
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"></script>
+  <script>
+    // Dummy JSON data for cards
+    const dummyData = [
+      { title: "Card 1", content: "This is the content of card 1." },
+      { title: "Card 2", content: "This is the content of card 2." },
+      { title: "Card 3", content: "This is the content of card 3." },
+      { title: "Card 4", content: "This is the content of card 4." },
+      { title: "Card 5", content: "This is the content of card 5." },
+      { title: "Card 6", content: "This is the content of card 6." },
+      { title: "Card 7", content: "This is the content of card 7." },
+      { title: "Card 8", content: "This is the content of card 8." },
+      { title: "Card 9", content: "This is the content of card 9." },
+      { title: "Card 10", content: "This is the content of card 10." },
+      { title: "Card 11", content: "This is the content of card 11." },
+      { title: "Card 12", content: "This is the content of card 12." },
+      { title: "Card 13", content: "This is the content of card 13." },
+      { title: "Card 14", content: "This is the content of card 14." },
+      { title: "Card 15", content: "This is the content of card 15." },
+      { title: "Card 16", content: "This is the content of card 16." },
+      { title: "Card 17", content: "This is the content of card 17." },
+      { title: "Card 18", content: "This is the content of card 18." },
+      { title: "Card 19", content: "This is the content of card 19." },
+      { title: "Card 20", content: "This is the content of card 20." },
+      { title: "Card 21", content: "This is the content of card 21." },
+      { title: "Card 22", content: "This is the content of card 22." },
+      { title: "Card 23", content: "This is the content of card 23." },
+      { title: "Card 24", content: "This is the content of card 24." },
+      { title: "Card 25", content: "This is the content of card 25." },
+      { title: "Card 26", content: "This is the content of card 26." },
+      { title: "Card 27", content: "This is the content of card 27." },
+      { title: "Card 28", content: "This is the content of card 28." },
+      { title: "Card 29", content: "This is the content of card 29." }
+    ];
+
+    let visibleCards = 20; // Number of cards to show initially
+    const cardContainer = document.getElementById('card-container');
+    const loadingSpinner = document.getElementById('loading-spinner');
+    let isLoading = false; // To prevent multiple simultaneous loads
+
+    // Function to render cards
+    function renderCards(startIndex, endIndex) {
+      for (let i = startIndex; i < endIndex; i++) {
+        if (i >= dummyData.length) return; // Stop if no more data
+        const card = document.createElement('div');
+        card.className = 'col-lg-3 col-md-4 col-sm-12';
+        card.innerHTML = `
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">${dummyData[i].title}</h5>
+              <p class="card-text">${dummyData[i].content}</p>
+            </div>
+          </div>
+        `;
+        cardContainer.appendChild(card);
+      }
+    }
+
+    // Initial render of 10 cards
+    renderCards(0, visibleCards);
+
+    // Infinite scroll logic
+    window.addEventListener('scroll', () => {
+      const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
+      // Trigger loading when user scrolls to 60% of the page
+      if (scrollTop + clientHeight >= scrollHeight * 0.6 && !isLoading && visibleCards < dummyData.length) {
+        isLoading = true; // Prevent multiple loads
+        loadingSpinner.style.display = 'block'; // Show loading spinner
+
+        setTimeout(() => {
+          const nextBatch = visibleCards + 5; // Load 5 more cards
+          renderCards(visibleCards, nextBatch);
+          visibleCards = nextBatch;
+          isLoading = false; // Allow loading again
+          loadingSpinner.style.display = 'none'; // Hide loading spinner
+        }, 1000); // Simulate delay for loading
+      }
+    });
+  </script>
+</body>
+</html>
